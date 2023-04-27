@@ -60,7 +60,7 @@ type Bucket interface {
 	Upload(ctx context.Context, name string, r io.Reader) error
 
 	// Delete removes the object with the given name.
-	// If object does not exists in the moment of deletion, Delete should throw error.
+	// If object does not exist in the moment of deletion, Delete should throw error.
 	Delete(ctx context.Context, name string) error
 
 ```
@@ -152,6 +152,7 @@ config:
   insecure: false
   signature_version2: false
   secret_key: ""
+  session_token: ""
   put_user_metadata: {}
   http_config:
     idle_conn_timeout: 1m30s
@@ -416,6 +417,7 @@ type: AZURE
 config:
   storage_account: ""
   storage_account_key: ""
+  storage_connection_string: ""
   container: ""
   endpoint: ""
   user_assigned_id: ""
@@ -450,6 +452,8 @@ prefix: ""
 If `msi_resource` is used, authentication is done via system-assigned managed identity. The value for Azure should be `https://<storage-account-name>.blob.core.windows.net`.
 
 If `user_assigned_id` is used, authentication is done via user-assigned managed identity. When using `user_assigned_id` the `msi_resource` defaults to `https://<storage_account>.<endpoint>`
+
+If `storage_connection_string` is set, the values of `storage_account` and `endpoint` values will not be used. Use this method over `storage_account_key` if you need to authenticate via a SAS token.
 
 The generic `max_retries` will be used as value for the `pipeline_config`'s `max_tries` and `reader_config`'s `max_retry_requests`. For more control, `max_retries` could be ignored (0) and one could set specific retry values.
 
